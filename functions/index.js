@@ -4,6 +4,11 @@ admin.initializeApp(functions.config().firebase);
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
+
+function filteredTitle(arr) {
+    let filtered = arr.filter(item => item === val)
+    return filtered;
+}
 exports.helloWorld = functions.https.onRequest((request, response) => {
     const original = request.query.text;
     let base = admin.database().ref('/sub_categories');
@@ -12,7 +17,6 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     // base.orderByChild('title').on('value', (data) => {
     //     console.log(typeof data.val(), data.val(), data.val()[0]);
     // })
-    console.log(request.query.text)
 
 //     base.orderByChild('title').equalTo(request.query.text).on('value', (snapshot) => {
 //         console.log(snapshot.val());
@@ -24,9 +28,10 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 //     response.send("STRING");
 
 // });
-let sur = 'Some : '
+let sur = ' '
 list.orderByChild('tags').on('value', (snapshot) => {
     let arr = [];
+        console.log(snapshot)
         snapshot.forEach((item) => {
             // console.log(item.val().tags)
             // console.log( Array.isArray(item.val().tags))
@@ -34,24 +39,26 @@ list.orderByChild('tags').on('value', (snapshot) => {
                 if(request.query.text.indexOf(',') === -1) {
                     if(item.val().tags.indexOf(request.query.text) !== -1) {
                         arr.push(item.key)
-                        sur += item.key
+                        sur += item.key + ", "
                     }
                 } else {
                     let spli = request.query.text.split(', ');
-                    console.log(spli)
+                    console.log(spli, item.val().tags)
+                    
                 }
                 
             }
         })
         // console.log("SNP", snapshot.val());
-        console.log(arr)
+        // console.log(arr)
         // return arr;
-
+        response.send(sur)
+       return arr;
     },
     (err) => console.log(err, "ERRROE"))
 
-
-    response.send(sur);
+    // promises().then(res => console.log(res)).catch(err => console.log(err))
+    
 
 });
 // Take the text parameter passed to this HTTP endpoint and insert it into the
