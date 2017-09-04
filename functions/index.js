@@ -24,14 +24,21 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
 //     response.send("STRING");
 
 // });
+let sur = 'Some : '
 list.orderByChild('tags').on('value', (snapshot) => {
     let arr = [];
         snapshot.forEach((item) => {
             // console.log(item.val().tags)
             // console.log( Array.isArray(item.val().tags))
             if(typeof item.val().tags !== "undefined") {
-                if(item.val().tags.indexOf(request.query.text) !== -1) {
-                    arr.push(item.key)
+                if(request.query.text.indexOf(',') === -1) {
+                    if(item.val().tags.indexOf(request.query.text) !== -1) {
+                        arr.push(item.key)
+                        sur += item.key
+                    }
+                } else {
+                    let spli = request.query.text.split(', ');
+                    console.log(spli)
                 }
                 
             }
@@ -44,7 +51,7 @@ list.orderByChild('tags').on('value', (snapshot) => {
     (err) => console.log(err, "ERRROE"))
 
 
-    response.send("STRING");
+    response.send(sur);
 
 });
 // Take the text parameter passed to this HTTP endpoint and insert it into the
