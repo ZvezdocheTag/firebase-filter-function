@@ -16,14 +16,15 @@ list.orderByChild('tags').on('value', (snapshot) => {
         snapshot.forEach((item) => {
             if(typeof item.val().tags !== "undefined") {
                 if(request.query.text.indexOf(',') === -1) {
+                    console.log(item.val())
                     if(item.val().tags.indexOf(request.query.text) !== -1) {
-                        sur += item.key + ", "
+                        sur += JSON.stringify(item.val()) + ','
                     }
                 } else {
                     let spli = request.query.text.split(','); 
                     spli.forEach(subitem => {
                         if(item.val().tags.indexOf(subitem) !== -1) {
-                            sur += item.key + ", "
+                            sur += JSON.stringify(item.val()) + ','
                         } 
                     })
                 }
