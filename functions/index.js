@@ -5,10 +5,6 @@ admin.initializeApp(functions.config().firebase);
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //
 
-function filteredTitle(arr) {
-    let filtered = arr.filter(item => item === val)
-    return filtered;
-}
 exports.helloWorld = functions.https.onRequest((request, response) => {
     const original = request.query.text;
     let base = admin.database().ref('/sub_categories');
@@ -21,11 +17,15 @@ list.orderByChild('tags').on('value', (snapshot) => {
             if(typeof item.val().tags !== "undefined") {
                 if(request.query.text.indexOf(',') === -1) {
                     if(item.val().tags.indexOf(request.query.text) !== -1) {
-                        arr.push(item.key)
                         sur += item.key + ", "
                     }
                 } else {
-                    let spli = request.query.text.split(', '); 
+                    let spli = request.query.text.split(','); 
+                    spli.forEach(subitem => {
+                        if(item.val().tags.indexOf(subitem) !== -1) {
+                            sur += item.key + ", "
+                        } 
+                    })
                 }
                 
             }
